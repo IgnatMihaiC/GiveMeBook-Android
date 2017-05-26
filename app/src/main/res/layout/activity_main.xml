@@ -2,17 +2,111 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/landingLayoutParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.licenta.mihai.givemebook_android.MainActivity">
+    tools:context="com.licenta.mihai.givemebook_android.LandingActivity">
 
-    <TextView
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="218dp" />
+
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/landing_login_Username"
+        android:layout_width="340dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:text="root@root.ro"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        app:layout_constraintHorizontal_bias="0.503"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/landing_login_Password"
+        android:layout_width="340dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:text="root"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:paddingLeft="10dp"
+        android:paddingRight="15dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_login_Username" />
+
+    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+        android:id="@+id/landing_registerButton"
+        android:layout_width="340dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:text="Register"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_loginButton" />
+
+    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+        android:id="@+id/landing_loginButton"
+        android:layout_width="340dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/colorPrimary"
+        android:elevation="0dp"
+        android:text="Continue"
+        app:initialCornerAngle="5dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_login_Password"
+        app:spinning_bar_color="@color/colorAccent" />
+
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/landing_fbLoginButton"
+        android:layout_width="340dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:text="Continue with facebook"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/landing_registerButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageLogo"
+        android:layout_width="180dp"
+        android:layout_height="163dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="46dp" />
 
 </android.support.constraint.ConstraintLayout>

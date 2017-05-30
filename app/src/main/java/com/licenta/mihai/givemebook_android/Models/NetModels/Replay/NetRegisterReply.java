@@ -11,7 +11,7 @@ public class NetRegisterReply {
     private String username = "";
     private String password = "";
     private String email = "";
-    File photo;
+    private File photo;
 
     public String getUsername() {
         return username;

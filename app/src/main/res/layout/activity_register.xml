@@ -2,8 +2,232 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register_parentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.licenta.mihai.givemebook_android.RegisterActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/register_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/colorPrimary"
+        android:elevation="10dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/register_toolbar_back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:src="@drawable/back_arrow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="Register"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:src="@drawable/user_icon"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/register_username_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/register_toolbar" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_username_inputLayout"
+        android:layout_width="285dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp"
+        app:errorEnabled="true"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_toolbar">
+
+        <EditText
+            android:id="@+id/register_username_editText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:hint="Username"
+            android:inputType="text"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/register_username_inputLayout"
+            app:layout_constraintLeft_toLeftOf="@+id/register_username_inputLayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/register_username_inputLayout" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="59dp"
+        android:src="@drawable/register_email"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/register_email_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_email_inputLayout"
+        android:layout_width="285dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:errorEnabled="true"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/register_username_inputLayout"
+        app:layout_constraintRight_toRightOf="@+id/register_username_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/register_username_inputLayout">
+
+        <EditText
+            android:id="@+id/register_email_editText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:lines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/register_username_inputLayout"
+            app:layout_constraintLeft_toLeftOf="@+id/register_username_inputLayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/register_username_inputLayout" />
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="59dp"
+        android:src="@drawable/register_password"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/register_password_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/imageView1" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_password_inputLayout"
+        android:layout_width="285dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:errorEnabled="true"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/register_email_inputLayout"
+        app:layout_constraintRight_toRightOf="@+id/register_email_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/register_email_inputLayout"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/register_password_editText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:lines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/register_email_inputLayout"
+            app:layout_constraintLeft_toLeftOf="@+id/register_email_inputLayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/register_email_inputLayout" />
+    </android.support.design.widget.TextInputLayout>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="59dp"
+        android:src="@drawable/register_password"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/register_repassword_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/register_repassword_inputLayout"
+        android:layout_width="285dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:errorEnabled="true"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/register_password_inputLayout"
+        app:layout_constraintRight_toRightOf="@+id/register_password_inputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/register_password_inputLayout"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/register_repassword_editText"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:hint="Re-enter Password"
+            android:inputType="textPassword"
+            android:lines="1"
+            app:layout_constraintBottom_toBottomOf="@+id/register_password_inputLayout"
+            app:layout_constraintLeft_toLeftOf="@+id/register_password_inputLayout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/register_password_inputLayout" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+        android:id="@+id/register_continue_button"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/round_border_button"
+        android:text="Continue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_repassword_inputLayout" />
 </android.support.constraint.ConstraintLayout>

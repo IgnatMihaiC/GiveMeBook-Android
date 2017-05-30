@@ -13,7 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="218dp" />
+        app:layout_constraintGuide_begin="218dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="218dp" />
 
 
     <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
@@ -23,39 +25,48 @@
         android:layout_marginTop="16dp"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:text="root@root.ro"
         android:paddingLeft="10dp"
         android:paddingRight="15dp"
+        android:text="root@root.ro"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-
-    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
-        android:id="@+id/landing_login_Password"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/pass_Layout"
         android:layout_width="340dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:text="root"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="16dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingLeft="10dp"
-        android:paddingRight="15dp"
+        android:layout_marginTop="8dp"
+        app:hintEnabled="false"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/landing_login_Username" />
+        app:layout_constraintTop_toBottomOf="@+id/landing_login_Username"
+        app:passwordToggleEnabled="true">
+
+        <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+            android:id="@+id/landing_login_Password"
+            android:layout_width="340dp"
+            android:layout_height="40dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:text="root" />
+    </android.support.design.widget.TextInputLayout>
 
     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
         android:id="@+id/landing_registerButton"
         android:layout_width="340dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/round_border_button"
         android:text="Register"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -64,27 +75,31 @@
     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
         android:id="@+id/landing_loginButton"
         android:layout_width="340dp"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/round_border_button"
         android:elevation="0dp"
         android:text="Continue"
         app:initialCornerAngle="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/landing_login_Password"
+        app:layout_constraintTop_toBottomOf="@+id/pass_Layout"
         app:spinning_bar_color="@color/colorAccent" />
 
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/landing_fbLoginButton"
         android:layout_width="340dp"
-        android:layout_height="40dp"
+        android:layout_height="26dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:text="Continue with facebook"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,15 +113,15 @@
         android:layout_width="180dp"
         android:layout_height="163dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo"
-        tools:layout_editor_absoluteX="100dp"
-        tools:layout_editor_absoluteY="46dp" />
+        app:srcCompat="@drawable/logo" />
 
 </android.support.constraint.ConstraintLayout>

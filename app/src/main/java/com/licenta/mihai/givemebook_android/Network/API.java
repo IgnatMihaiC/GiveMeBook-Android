@@ -5,6 +5,7 @@ import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
 
 import java.io.File;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 
 import retrofit2.http.Body;
@@ -20,9 +21,9 @@ public interface API {
 
     @Multipart
     @POST("api/user/register")
-    Call<UserModel> registerUser(@Part("username") String username,
-                                 @Part("email") String email,
-                                 @Part("password") String password,
+    Call<UserModel> registerUser(@Part("username") RequestBody username,
+                                 @Part("email") RequestBody email,
+                                 @Part("password") RequestBody password,
                                  @Part("photo") File file);
 
     @POST("api/user/login")

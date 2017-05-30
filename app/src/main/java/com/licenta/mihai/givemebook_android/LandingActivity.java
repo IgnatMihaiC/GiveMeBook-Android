@@ -51,7 +51,7 @@ public class LandingActivity extends AppCompatActivity {
         ObjectAnimator scaleDown;
         scaleDown = ObjectAnimator.ofFloat(imageLogo,
                 "rotationY", 0f, 360f);
-        scaleDown.setDuration(1000);
+        scaleDown.setDuration(600);
         scaleDown.setRepeatCount(ObjectAnimator.INFINITE);
         scaleDown.setRepeatMode(ObjectAnimator.REVERSE);
         //scaleDown.start();
@@ -78,6 +78,7 @@ public class LandingActivity extends AppCompatActivity {
                         User.getInstance().setCurrentUser(response.body());
                         Util.showObjectLog(response.body());
                         ((CircularProgressButton) view).revertAnimation();
+                        Util.openActivityClosingParent(LandingActivity.this, MainActivity.class);
                     }
 
                     @Override
@@ -97,7 +98,7 @@ public class LandingActivity extends AppCompatActivity {
                 sendLogin(view);
                 break;
             case R.id.landing_registerButton:
-//               Util.openActivityClosingParent(LandingActivity.this,R);
+                Util.openActivity(LandingActivity.this, RegisterActivity.class);
                 break;
         }
     }

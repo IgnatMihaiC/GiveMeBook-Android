@@ -20,6 +20,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/main_view_search_input"
+        android:layout_width="150dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="165dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/custom_edit_text"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/main_view_search"
         android:layout_width="45dp"
@@ -33,6 +46,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <ImageView
         android:id="@+id/main_view_profile_friends"
         android:layout_width="45dp"
@@ -43,23 +57,53 @@
         android:padding="5dp"
         android:src="@drawable/friends_icon"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/main_view_profile_settings"
+        app:layout_constraintBottom_toTopOf="@+id/main_view_profile_settings_layout"
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
         app:layout_constraintTop_toBottomOf="@+id/main_view_search"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/main_view_profile_settings"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="137dp"
-        android:layout_marginEnd="21dp"
-        android:layout_marginRight="21dp"
-        android:padding="5dp"
-        android:src="@drawable/settings_icon"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintRight_toRightOf="parent" />
+    <RelativeLayout
+        android:id="@+id/main_view_profile_settings_layout"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="45dp"
+        app:layout_constraintLeft_toLeftOf="@+id/guideline2"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageView
+            android:id="@+id/main_view_profile_settings1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dp"
+            android:src="@color/colorPrimary"
+            android:visibility="gone" />
+
+
+        <ImageView
+            android:id="@+id/main_view_profile_settings2"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dp"
+            android:src="@color/colorPrimaryLight"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/main_view_profile_settings"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="5dp"
+            android:src="@drawable/settings_icon"
+            android:visibility="visible" />
+    </RelativeLayout>
+
 
     <View
         android:id="@+id/view"
@@ -105,5 +149,6 @@
         app:layout_constraintGuide_begin="218dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="218dp" />
+
 
 </android.support.constraint.ConstraintLayout>

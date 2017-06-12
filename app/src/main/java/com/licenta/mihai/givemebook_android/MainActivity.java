@@ -2,20 +2,34 @@ package com.licenta.mihai.givemebook_android;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import com.licenta.mihai.givemebook_android.Adapters.Books.BookCell;
+import com.licenta.mihai.givemebook_android.Adapters.Books.BookGridAdapter;
+import com.licenta.mihai.givemebook_android.Adapters.Friend.FriendListCell;
+import com.licenta.mihai.givemebook_android.Adapters.Friend.FriendRecyclerAdapterAdapter;
+import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserPreferencesPopup;
+import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserSettingsPopup;
+import com.licenta.mihai.givemebook_android.Singletons.User;
+import com.licenta.mihai.givemebook_android.Utils.Util;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,16 +55,17 @@ public class MainActivity extends AppCompatActivity {
     GridView gridView;
 
 
-    @BindView(R.id.main_view_profile_settings1)
-    ImageView settings1;
+    @BindView(R.id.main_view_profile_preferences)
+    ImageView settingsPreferences;
 
-    @BindView(R.id.main_view_profile_settings2)
-    ImageView settings2;
+    @BindView(R.id.main_view_profile_settings_gen)
+    ImageView settingsGen;
 
     @BindView(R.id.main_view_search_input)
     EditText searchInput;
 
-
+    @BindView(R.id.main_view_friend_list)
+    RecyclerView friendsList;
     //endregion
 
     static final String[] numbers = new String[]{
@@ -73,26 +88,19 @@ public class MainActivity extends AppCompatActivity {
     private Boolean toggleSettings = true;
     private Boolean toggleSearch = true;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
         initComponents();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, numbers);
-
+        List<BookCell> allBooks = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            allBooks.add(new BookCell());
+        }
+        BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
         gridView.setAdapter(adapter);
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Toast.makeText(getApplicationContext(),
-                        ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     private void initComponents() {
@@ -101,10 +109,32 @@ public class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
+
+        if (User.getInstance().getCurrentUser().getPhotoUrl() != null) {
+            Picasso.with(MainActivity.this)
+                    .load("http://" + User.getInstance().getCurrentUser().getPhotoUrl())
+                    .into(profilePicture);
+        }
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        friendsList.setLayoutManager(layoutManager);
+        List<FriendListCell> cells = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            cells.add(new FriendListCell("name", "photo"));
+
+        }
+        FriendRecyclerAdapterAdapter adapter = new FriendRecyclerAdapterAdapter(MainActivity.this, cells, new FriendRecyclerAdapterAdapter.CustomItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Util.openActivity(MainActivity.this, FriendActivity.class);
+            }
+        });
+        friendsList.setAdapter(adapter);
+
     }
 
 
-    @OnClick({R.id.main_view_profile_picture, R.id.main_view_profile_friends, R.id.main_view_profile_settings, R.id.main_view_search})
+    @OnClick({R.id.main_view_profile_picture, R.id.main_view_profile_friends, R.id.main_view_profile_settings, R.id.main_view_search, R.id.main_view_profile_preferences, R.id.main_view_profile_settings_gen})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_view_profile_picture:
@@ -113,6 +143,30 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_view_profile_settings:
                 doSettingsAnimations();
                 break;
+            case R.id.main_view_profile_preferences:
+                DialogInterface.OnDismissListener onDismissPrefs = new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        exitSettingsAnimation();
+                        toggleSettings = true;
+                    }
+                };
+                UserPreferencesPopup preffsPopup = new UserPreferencesPopup(MainActivity.this, onDismissPrefs);
+                preffsPopup.init();
+                preffsPopup.showUserPopup();
+                break;
+            case R.id.main_view_profile_settings_gen:
+                DialogInterface.OnDismissListener onDismiss = new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        exitSettingsAnimation();
+                        toggleSettings = true;
+                    }
+                };
+                UserSettingsPopup userSettingsPopup = new UserSettingsPopup(MainActivity.this, onDismiss);
+                userSettingsPopup.init();
+                userSettingsPopup.showUserPopup();
+                break;
             case R.id.main_view_search:
                 doSearchAnimations();
                 break;
@@ -120,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+
 
     //region menu animations
     private void enterAnimation() {
@@ -153,10 +208,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void enterSettingsAnimation() {
-        settings1.setVisibility(View.VISIBLE);
-        settings2.setVisibility(View.VISIBLE);
-        settings1.animate().translationX(-150).setDuration(600);
-        settings1.animate().setListener(new Animator.AnimatorListener() {
+        settingsPreferences.setVisibility(View.VISIBLE);
+        settingsGen.setVisibility(View.VISIBLE);
+        settingsPreferences.animate().translationX(-150).setDuration(600);
+        settingsPreferences.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -164,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                settings1.setVisibility(View.VISIBLE);
+                settingsPreferences.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -177,8 +232,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        settings2.animate().translationY(150).setDuration(600);
-        settings2.animate().setListener(new Animator.AnimatorListener() {
+        settingsGen.animate().translationY(150).setDuration(600);
+        settingsGen.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -186,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                settings2.setVisibility(View.VISIBLE);
+                settingsGen.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -202,8 +257,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void exitSettingsAnimation() {
-        settings1.animate().translationX(0).setDuration(600);
-        settings1.animate().setListener(new Animator.AnimatorListener() {
+        settingsPreferences.animate().translationX(0).setDuration(600);
+        settingsPreferences.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -211,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                settings1.setVisibility(View.GONE);
+                settingsPreferences.setVisibility(View.GONE);
             }
 
             @Override
@@ -224,8 +279,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        settings2.animate().translationY(0).setDuration(600);
-        settings2.animate().setListener(new Animator.AnimatorListener() {
+        settingsGen.animate().translationY(0).setDuration(600);
+        settingsGen.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
 
@@ -233,7 +288,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                settings2.setVisibility(View.GONE);
+                settingsGen.setVisibility(View.GONE);
             }
 
             @Override
@@ -294,6 +349,7 @@ public class MainActivity extends AppCompatActivity {
             });
             toggleSearch = false;
         } else {
+            closeSoftKeyboard();
             searchInput.animate().translationX(320).setDuration(600);
             searchInput.animate().setListener(new Animator.AnimatorListener() {
                 @Override
@@ -353,4 +409,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //endregion
+    private void closeSoftKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            view.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+
 }

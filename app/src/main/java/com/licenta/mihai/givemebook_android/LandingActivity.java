@@ -1,11 +1,11 @@
 package com.licenta.mihai.givemebook_android;
 
 import android.animation.ObjectAnimator;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -14,6 +14,7 @@ import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetLoginReply;
 import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.Singletons.User;
+import com.licenta.mihai.givemebook_android.Utils.OfflineHandler;
 import com.licenta.mihai.givemebook_android.Utils.Util;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
@@ -78,6 +79,10 @@ public class LandingActivity extends AppCompatActivity {
                         User.getInstance().setCurrentUser(response.body());
                         Util.showObjectLog(response.body());
                         ((CircularProgressButton) view).revertAnimation();
+
+                        OfflineHandler.getInstance().storeUsername(emailEditText.getText().toString());
+                        OfflineHandler.getInstance().storePassword(passwordEditText.getText().toString());
+
                         Util.openActivityClosingParent(LandingActivity.this, MainActivity.class);
                     }
 

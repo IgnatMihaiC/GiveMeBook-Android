@@ -1,9 +1,6 @@
 package com.licenta.mihai.givemebook_android.Singletons;
 
-import com.licenta.mihai.givemebook_android.Models.BaseModels.Preferences;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
-
-import java.util.List;
 
 /**
  * Created by mihai on 24.05.2017.

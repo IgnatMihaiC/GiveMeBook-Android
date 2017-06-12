@@ -18,7 +18,7 @@ public class UserModel {
     public String updatedAt;
 
     private List<Preferences> preferences;
-
+    private Settings settings;
 
     public long getUid() {
         return uid;
@@ -90,5 +90,13 @@ public class UserModel {
 
     public void setPreferences(List<Preferences> preferences) {
         this.preferences = preferences;
+    }
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 }

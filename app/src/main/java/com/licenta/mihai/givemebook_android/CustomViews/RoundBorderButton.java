@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 
 import com.licenta.mihai.givemebook_android.R;
 
@@ -20,8 +19,8 @@ public class RoundBorderButton extends AppCompatButton {
         this.setTextColor(getResources().getColor(R.color.colorPrimaryText));
         this.setHintTextColor(getResources().getColor(R.color.colorSecondaryText));
         this.setSingleLine(true);
+        this.setBackgroundColor(getResources().getColor(R.color.colorPrimaryLight));
         this.setInputType(this.getInputType());
-        this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
 
         int originalDrawable = R.drawable.round_border_button;
         int sdk = android.os.Build.VERSION.SDK_INT;

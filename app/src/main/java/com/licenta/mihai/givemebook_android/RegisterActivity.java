@@ -1,12 +1,12 @@
 package com.licenta.mihai.givemebook_android;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +16,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
-import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetRegisterReply;
 import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.Utils.Util;
 

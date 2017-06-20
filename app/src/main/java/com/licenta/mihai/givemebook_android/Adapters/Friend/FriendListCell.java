@@ -26,11 +26,11 @@ public class FriendListCell {
         this.userName = userName;
     }
 
-    public String getCircleImageView() {
+    public String getPhotoUrl() {
         return photoUrl;
     }
 
-    public void setCircleImageView(String circleImageView) {
-        this.photoUrl = circleImageView;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.licenta.mihai.givemebook_android.MainActivity">
 
     <GridView
         android:id="@+id/main_view_gridMainData"
         android:layout_width="0dp"
-        android:layout_height="551dp"
-        android:layout_marginBottom="50dp"
+        android:layout_height="0dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
+        android:horizontalSpacing="5dp"
         android:numColumns="2"
+        android:verticalSpacing="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -24,10 +24,8 @@
 
     <EditText
         android:id="@+id/main_view_search_input"
-        android:layout_width="150dp"
-        android:layout_height="40dp"
-        android:layout_marginLeft="165dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@drawable/custom_edit_text"
         android:maxLines="1"
         android:singleLine="true"
@@ -50,7 +48,7 @@
 
 
     <ImageView
-        android:id="@+id/main_view_profile_friends"
+        android:id="@+id/main_view_add_book"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginBottom="8dp"
@@ -110,8 +108,8 @@
 
     <View
         android:id="@+id/view"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="124dp"
+        android:layout_height="125dp"
         android:background="@drawable/semi_round"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -120,15 +118,15 @@
         android:id="@+id/main_view_friend_list"
         android:layout_width="0dp"
         android:layout_height="75dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteX="8dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ImageView
         android:id="@+id/main_view_profile_picture"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"

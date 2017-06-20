@@ -30,7 +30,8 @@
             android:screenOrientation="portrait" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".FriendActivity"></activity>
+        <activity android:name=".FriendActivity" />
+        <activity android:name=".BookDetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:background="@drawable/custom_dialog_layout"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/add_book_add_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/add_book_image" />
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/add_book_title_editText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/add_book_add_image"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="Title"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp" />
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/add_book_author_editText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/add_book_title_editText"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="Author"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp" />
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/add_book_description_editText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/add_book_author_editText"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="Description"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp" />
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/add_book_categorie_editText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_below="@+id/add_book_description_editText"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:hint="Category"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp" />
+
+    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+        android:id="@+id/add_book_send_button"
+        android:layout_width="220dp"
+        android:layout_height="45dp"
+        android:layout_below="@+id/add_book_categorie_editText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/round_border_button"
+        android:text="Save" />
+</RelativeLayout>

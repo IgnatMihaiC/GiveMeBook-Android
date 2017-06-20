@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSans;
 import com.licenta.mihai.givemebook_android.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,12 @@ public class FriendRecyclerAdapterAdapter extends RecyclerView.Adapter<FriendRec
 
     @Override
     public CellHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        FriendListCell friendListCell = friendListCells.get(viewType);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View cell = inflater.inflate(R.layout.friend_list_element, parent, false);
         final CellHolder cellHolder = new CellHolder(cell);
+        cellHolder.userName.setText(friendListCell.getUserName());
+        Picasso.with(context).load("http://" + friendListCell.getPhotoUrl()).into(cellHolder.userPhoto);
         cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

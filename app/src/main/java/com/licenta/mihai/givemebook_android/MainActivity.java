@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -22,10 +24,13 @@ import com.licenta.mihai.givemebook_android.Adapters.Books.BookCell;
 import com.licenta.mihai.givemebook_android.Adapters.Books.BookGridAdapter;
 import com.licenta.mihai.givemebook_android.Adapters.Friend.FriendListCell;
 import com.licenta.mihai.givemebook_android.Adapters.Friend.FriendRecyclerAdapterAdapter;
+import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserAddBook;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserPreferencesPopup;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserSettingsPopup;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.Interactions;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.SharedUser;
+import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.Singletons.User;
-import com.licenta.mihai.givemebook_android.Utils.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -34,6 +39,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_view_profile_picture)
     ImageView profilePicture;
 
-    @BindView(R.id.main_view_profile_friends)
-    ImageView profileFriends;
+    @BindView(R.id.main_view_add_book)
+    ImageView addBook;
 
     @BindView(R.id.main_view_profile_settings_layout)
     RelativeLayout profileSettings;
@@ -68,22 +76,6 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView friendsList;
     //endregion
 
-    static final String[] numbers = new String[]{
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "A", "B", "C", "D", "E",
-            "F", "G", "H", "I", "J",
-            "K", "L", "M", "N", "O",
-            "P", "Q", "R", "S", "T",
-            "U", "V", "W", "X", "Y", "Z"};
-
-
     private Boolean toggleMenu = true;
     private Boolean toggleSettings = true;
     private Boolean toggleSearch = true;
@@ -94,13 +86,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
+        getAdditionUserData();
         initComponents();
-        List<BookCell> allBooks = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            allBooks.add(new BookCell());
-        }
-        BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
-        gridView.setAdapter(adapter);
+        initFriendList();
+
     }
 
     private void initComponents() {
@@ -109,6 +98,20 @@ public class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
+        List<BookCell> allBooks = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            allBooks.add(new BookCell());
+        }
+        BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
+                intent.putExtra("position", position);
+                startActivity(intent);
+            }
+        });
 
         if (User.getInstance().getCurrentUser().getPhotoUrl() != null) {
             Picasso.with(MainActivity.this)
@@ -116,25 +119,52 @@ public class MainActivity extends AppCompatActivity {
                     .into(profilePicture);
         }
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        friendsList.setLayoutManager(layoutManager);
-        List<FriendListCell> cells = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            cells.add(new FriendListCell("name", "photo"));
-
-        }
-        FriendRecyclerAdapterAdapter adapter = new FriendRecyclerAdapterAdapter(MainActivity.this, cells, new FriendRecyclerAdapterAdapter.CustomItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Util.openActivity(MainActivity.this, FriendActivity.class);
-            }
-        });
-        friendsList.setAdapter(adapter);
 
     }
 
+    public void getAdditionUserData() {
 
-    @OnClick({R.id.main_view_profile_picture, R.id.main_view_profile_friends, R.id.main_view_profile_settings, R.id.main_view_search, R.id.main_view_profile_preferences, R.id.main_view_profile_settings_gen})
+    }
+
+    private void initFriendList() {
+        final List<FriendListCell> cells = new ArrayList<>();
+        for (Interactions interactions : User.getInstance().getCurrentUser().getInteractions()) {
+            if (interactions.getType() != 3) {
+                RestClient.networkHandler().getUserById(User.getInstance().getCurrentUser().getToken(), interactions.getRefId())
+                        .enqueue(new Callback<SharedUser>() {
+                            @Override
+                            public void onResponse(Call<SharedUser> call, Response<SharedUser> response) {
+                                User.getInstance().getFriendList().add(response.body());
+                                cells.add(new FriendListCell(response.body().getUsername(), response.body().getPhotoUrl()));
+                            }
+
+                            @Override
+                            public void onFailure(Call<SharedUser> call, Throwable t) {
+
+                            }
+                        });
+            }
+        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        friendsList.setLayoutManager(layoutManager);
+        FriendRecyclerAdapterAdapter adapter = new FriendRecyclerAdapterAdapter(MainActivity.this, cells, new FriendRecyclerAdapterAdapter.CustomItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+                intent.putExtra("position", position);
+                startActivity(intent);
+            }
+        });
+        friendsList.setAdapter(adapter);
+        if (cells.size() == 0) {
+            friendsList.setVisibility(View.GONE);
+        } else {
+            friendsList.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    @OnClick({R.id.main_view_profile_picture, R.id.main_view_add_book, R.id.main_view_profile_settings, R.id.main_view_search, R.id.main_view_profile_preferences, R.id.main_view_profile_settings_gen})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_view_profile_picture:
@@ -170,7 +200,16 @@ public class MainActivity extends AppCompatActivity {
             case R.id.main_view_search:
                 doSearchAnimations();
                 break;
-            case R.id.main_view_profile_friends:
+            case R.id.main_view_add_book:
+                DialogInterface.OnDismissListener onDismissBook = new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+
+                    }
+                };
+                UserAddBook userAddBook = new UserAddBook(MainActivity.this,onDismissBook);
+                userAddBook.init();
+                userAddBook.showUserPopup();
                 break;
         }
     }
@@ -181,11 +220,11 @@ public class MainActivity extends AppCompatActivity {
 
         profileSearch.animate().translationX(-250).setDuration(600);
         ObjectAnimator friendsAnimX;
-        friendsAnimX = ObjectAnimator.ofFloat(profileFriends, "translationX", -150);
+        friendsAnimX = ObjectAnimator.ofFloat(addBook, "translationX", -150);
         friendsAnimX.setDuration(600);
         friendsAnimX.start();
         ObjectAnimator friendsAnimY;
-        friendsAnimY = ObjectAnimator.ofFloat(profileFriends, "translationY", 100);
+        friendsAnimY = ObjectAnimator.ofFloat(addBook, "translationY", 100);
         friendsAnimY.setDuration(600);
         friendsAnimY.start();
         profileSettings.animate().translationY(250).setDuration(600);
@@ -194,12 +233,12 @@ public class MainActivity extends AppCompatActivity {
     private void exitAnimation() {
         profileSearch.animate().translationX(0).setDuration(600);
         ObjectAnimator friendsAnimX;
-        friendsAnimX = ObjectAnimator.ofFloat(profileFriends, "translationX", 150);
+        friendsAnimX = ObjectAnimator.ofFloat(addBook, "translationX", 150);
         friendsAnimX.setDuration(600);
         friendsAnimX.start();
 
         ObjectAnimator friendsAnimY;
-        friendsAnimY = ObjectAnimator.ofFloat(profileFriends, "translationY", -100);
+        friendsAnimY = ObjectAnimator.ofFloat(addBook, "translationY", -100);
         friendsAnimY.setDuration(600);
         friendsAnimY.start();
         profileSettings.animate().translationY(0).setDuration(600);

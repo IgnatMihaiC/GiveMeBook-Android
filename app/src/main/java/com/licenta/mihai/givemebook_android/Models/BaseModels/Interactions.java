@@ -10,7 +10,7 @@ public class Interactions {
 
     private Integer type = -1;
 
-    private Integer refId = 0;
+    private Long refId = 0l;
 
 
     public Long getiId() {
@@ -29,11 +29,11 @@ public class Interactions {
         this.type = type;
     }
 
-    public Integer getRefId() {
+    public Long getRefId() {
         return refId;
     }
 
-    public void setRefId(Integer refId) {
+    public void setRefId(Long refId) {
         this.refId = refId;
     }
 }

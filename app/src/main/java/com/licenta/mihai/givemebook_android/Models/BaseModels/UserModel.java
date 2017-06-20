@@ -19,6 +19,9 @@ public class UserModel {
 
     private List<Preferences> preferences;
     private Settings settings;
+    private List<Interactions> interactions;
+//    private List<Recommendations> recommendations;
+    private List<BookState> bookStates;
 
     public long getUid() {
         return uid;
@@ -98,5 +101,21 @@ public class UserModel {
 
     public void setSettings(Settings settings) {
         this.settings = settings;
+    }
+
+    public List<Interactions> getInteractions() {
+        return interactions;
+    }
+
+    public void setInteractions(List<Interactions> interactions) {
+        this.interactions = interactions;
+    }
+
+    public List<BookState> getBookStates() {
+        return bookStates;
+    }
+
+    public void setBookStates(List<BookState> bookStates) {
+        this.bookStates = bookStates;
     }
 }

@@ -7,6 +7,20 @@
     android:background="@color/white"
     tools:context="com.licenta.mihai.givemebook_android.MainActivity">
 
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold
+        android:id="@+id/noLayoutMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Some Text"
+        android:visibility="gone"
+        android:textSize="26sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="113dp"
+        tools:layout_editor_absoluteY="283dp" />
+
     <GridView
         android:id="@+id/main_view_gridMainData"
         android:layout_width="0dp"

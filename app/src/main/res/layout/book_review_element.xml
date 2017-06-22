@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    android:orientation="vertical">
+
+    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+        android:id="@+id/review_element_content"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/custom_dialog_layout"
+        android:enabled="false"
+        android:padding="10dp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/review_element_userPhoto"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="65dp"
+        android:src="@drawable/profile_mockup" />
+
+    <LinearLayout
+        android:id="@+id/add_review_userOption"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/review_element_userPhoto"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:weightSum="1">
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/addReview_saveButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.45"
+            android:background="@drawable/round_border_button"
+            android:text="Save" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:background="@color/white" />
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/addReview_discardButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.45"
+            android:background="@drawable/round_border_button"
+            android:text="Discard" />
+    </LinearLayout>
+</RelativeLayout>

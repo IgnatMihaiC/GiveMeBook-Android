@@ -1,12 +1,16 @@
 package com.licenta.mihai.givemebook_android.Network;
 
+import com.licenta.mihai.givemebook_android.Models.BaseModels.BookReview;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.Recommendations;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Settings;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.SharedUser;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
+import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetInteractions;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetLoginReply;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Response.NetStringResponse;
 
 import java.io.File;
+import java.util.List;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -31,6 +35,16 @@ public interface API {
                                  @Part("password") RequestBody password,
                                  @Part("photo") File file);
 
+    @POST("api/user/registerFacebook")
+    Call<UserModel> registerFacebook(@Body UserModel userModel);
+
+    @POST("api/user/updatePassword/{id}")
+    Call<NetStringResponse> changePassword(@Header("Authorization") String token, @Path("id") Long userID, @Body RequestBody password);
+
+    @Multipart
+    @POST("/api/user/updatePhoto")
+    Call<NetStringResponse> updatePhoto(@Header("Authorization") String token, @Part("id") Long userID, @Part("photo") RequestBody  photo);
+
     @POST("api/user/login")
     Call<UserModel> loginUser(@Body NetLoginReply netLoginReply);
 
@@ -47,11 +61,23 @@ public interface API {
     @POST("api/book/addBook")
     Call<NetStringResponse> addBook(@Header("Authorization") String token,
                                     @Part("userID") Long userID,
-                                    @Path("title") RequestBody title,
+                                    @Part("bookTitle") RequestBody bookTitle,
                                     @Part("author") RequestBody author,
                                     @Part("description") RequestBody description,
                                     @Part("categories") RequestBody categories,
                                     @Part("cover_photo") File file);
+
+    @GET("api/recommendation/get/{id}")
+    Call<List<Recommendations>> getRecommendations(@Header("Authorization") String token, @Path("id") Long userID);
+
+    @POST("api/book/addBookReview/{id}")
+    Call<NetStringResponse> addBookReview(@Header("Authorization") String token, @Path("id") Long bookID, @Body BookReview bookReview);
+
+    @POST("api/user/addInteraction")
+    Call<NetStringResponse> addInteractions(@Header("Authorization") String token, @Body NetInteractions interactions);
+
+    @POST("api/user/removeInteraction")
+    Call<NetStringResponse> removeInteraction(@Header("Authorization") String token, @Body NetInteractions interactions);
 
 
 }

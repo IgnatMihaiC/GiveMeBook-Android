@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Response.NetStringResponse;
@@ -89,7 +90,9 @@ public class UserAddBook {
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), descriptionEditText.getText().toString());
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("name", categoryEditText.getText().toString());
-        RequestBody categories = RequestBody.create(MediaType.parse("text/plain"), jsonObject.toString());
+        JsonArray jsonElements = new JsonArray();
+        jsonElements.add(jsonObject);
+        RequestBody categories = RequestBody.create(MediaType.parse("text/plain"), jsonElements.toString());
         RestClient.networkHandler().addBook(
                 User.getInstance().getCurrentUser().getToken(),
                 User.getInstance().getCurrentUser().getUid(),
@@ -106,7 +109,7 @@ public class UserAddBook {
 
                     @Override
                     public void onFailure(Call<NetStringResponse> call, Throwable t) {
-
+//                        dismissDateDialog();
                     }
                 });
     }

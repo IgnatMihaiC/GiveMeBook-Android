@@ -5,11 +5,14 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,15 +27,24 @@ import com.licenta.mihai.givemebook_android.Adapters.Books.BookCell;
 import com.licenta.mihai.givemebook_android.Adapters.Books.BookGridAdapter;
 import com.licenta.mihai.givemebook_android.Adapters.Friend.FriendListCell;
 import com.licenta.mihai.givemebook_android.Adapters.Friend.FriendRecyclerAdapterAdapter;
+import com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserAddBook;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserPreferencesPopup;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserSettingsPopup;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Interactions;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.Recommendations;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.SharedUser;
 import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.Singletons.User;
+import com.licenta.mihai.givemebook_android.Singletons.UserRecommendation;
+import com.licenta.mihai.givemebook_android.Utils.UploadPhoto;
+import com.licenta.mihai.givemebook_android.Utils.Util;
 import com.squareup.picasso.Picasso;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,12 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.main_view_friend_list)
     RecyclerView friendsList;
+
+    @BindView(R.id.noLayoutMessage)
+    TextViewOpenSansBold noInfos;
     //endregion
 
     private Boolean toggleMenu = true;
     private Boolean toggleSettings = true;
     private Boolean toggleSearch = true;
-
+    private UserSettingsPopup userSettingsPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,28 +113,53 @@ public class MainActivity extends AppCompatActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
-        List<BookCell> allBooks = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            allBooks.add(new BookCell());
-        }
-        BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
-                intent.putExtra("position", position);
-                startActivity(intent);
-            }
-        });
-
+        getRecommendations();
         if (User.getInstance().getCurrentUser().getPhotoUrl() != null) {
             Picasso.with(MainActivity.this)
-                    .load("http://" + User.getInstance().getCurrentUser().getPhotoUrl())
+                    .load(User.getInstance().getCurrentUser().getPhotoUrl())
                     .into(profilePicture);
         }
 
 
+    }
+
+    private void getRecommendations() {
+        RestClient.networkHandler().getRecommendations(User.getInstance().getCurrentUser().getToken(), User.getInstance().getCurrentUser().getUid())
+                .enqueue(new Callback<List<Recommendations>>() {
+                    @Override
+                    public void onResponse(Call<List<Recommendations>> call, Response<List<Recommendations>> response) {
+                        setUpRecommendations(response);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Recommendations>> call, Throwable t) {
+
+                    }
+                });
+    }
+
+    private void setUpRecommendations(Response<List<Recommendations>> response) {
+        UserRecommendation.getInstance().setRecommendationsList(response.body());
+        if (UserRecommendation.getInstance().getRecommendationsList().size() != 0) {
+            noInfos.setVisibility(View.GONE);
+            List<BookCell> allBooks = new ArrayList<>();
+            for (Recommendations r : response.body()) {
+                allBooks.add(new BookCell(r.getBook(), r.getUser().getPhotoUrl()));
+            }
+            BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
+            gridView.setAdapter(adapter);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
+                    intent.putExtra("position", position);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            noInfos.setText("No recommendation yet");
+            noInfos.setVisibility(View.VISIBLE);
+        }
     }
 
     public void getAdditionUserData() {
@@ -193,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                         toggleSettings = true;
                     }
                 };
-                UserSettingsPopup userSettingsPopup = new UserSettingsPopup(MainActivity.this, onDismiss);
+                userSettingsPopup = new UserSettingsPopup(MainActivity.this, onDismiss);
                 userSettingsPopup.init();
                 userSettingsPopup.showUserPopup();
                 break;
@@ -207,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 };
-                UserAddBook userAddBook = new UserAddBook(MainActivity.this,onDismissBook);
+                UserAddBook userAddBook = new UserAddBook(MainActivity.this, onDismissBook);
                 userAddBook.init();
                 userAddBook.showUserPopup();
                 break;
@@ -457,5 +497,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (userSettingsPopup.uploadPhoto.handleOnActivityResult(requestCode, resultCode, data)) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(UploadPhoto.getPicturePath(), options);
+            final int REQUIRED_SIZE = 1024;
+            int scale = 1;
+            while (options.outWidth / scale / 2 >= REQUIRED_SIZE
+                    && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                scale *= 2;
+            options.inSampleSize = scale;
+            options.inJustDecodeBounds = false;
 
+            Bitmap bitmap = BitmapFactory.decodeFile(UploadPhoto.getPicturePath(), options);
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            if (height > width) {
+                width = (int) ((width * 1000) / height);
+                height = 1000;
+            } else {
+                height = (int) ((height * 1000) / width);
+                width = 1000;
+            }
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, width, height, true);
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(UploadPhoto.getPicturePathEdited());
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (out != null) {
+                        out.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            userSettingsPopup.isPictureReady();
+        }
+    }
 }

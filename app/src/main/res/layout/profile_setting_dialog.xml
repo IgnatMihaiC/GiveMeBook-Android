@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/userPopup_mainLayout"
         android:layout_width="345dp"
-        android:layout_height="290dp"
+        android:layout_height="395dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
         android:background="@drawable/custom_dialog_layout"
@@ -28,76 +28,12 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/userPopup_email_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/userPopup_userName"
-            android:layout_centerHorizontal="true"
-
-            android:layout_marginTop="29dp"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:weightSum="1">
-
-            <com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSans
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="0.6"
-                android:text="Email Notification"
-                android:textColor="@color/colorPrimaryText"
-                android:textSize="16sp" />
-
-
-            <RadioGroup
-                android:id="@+id/toggle_email"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_weight="0.4"
-                android:background="@drawable/pink_out_line"
-                android:checkedButton="@+id/offer"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/custom_switch_toggle_email_off"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginLeft="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/toggle_widget_background"
-                    android:button="@null"
-                    android:checked="true"
-                    android:gravity="center"
-                    android:text="Off"
-                    android:textColor="@color/white" />
-
-                <RadioButton
-                    android:id="@+id/custom_switch_toggle_email_on"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="1dp"
-                    android:layout_marginRight="1dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/toggle_widget_background"
-                    android:button="@null"
-                    android:gravity="center"
-                    android:text="On"
-                    android:textColor="@color/white" />
-            </RadioGroup>
-
-        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/userPopup_push_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/userPopup_email_layout"
-            android:layout_below="@+id/userPopup_email_layout"
+            android:layout_below="@+id/userPopup_userName"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="15dp"
             android:orientation="horizontal"
@@ -156,13 +92,40 @@
 
         </LinearLayout>
 
+        <com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton
+            android:id="@+id/userPopup_changePassword_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/userPopup_push_layout"
+            android:layout_marginTop="20dp"
+            android:text="Change Password" />
+
+
+        <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+            android:id="@+id/userPopup_changePassword_editText"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:layout_below="@id/userPopup_changePassword_button"
+            android:layout_marginTop="5dp"
+            android:hint="New Password"
+            android:paddingStart="10dp" />
+
+        <com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton
+            android:id="@+id/userPopup_changePhoto_button"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/userPopup_changePassword_editText"
+            android:layout_marginTop="20dp"
+            android:text="Change Photo" />
+
 
         <com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton
             android:id="@+id/userPopup_logout_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@id/userPopup_push_layout"
+            android:layout_below="@id/userPopup_changePhoto_button"
+            android:layout_marginTop="20dp"
             android:text="LogOut" />
     </RelativeLayout>
 

@@ -41,7 +41,7 @@ public class FriendRecyclerAdapterAdapter extends RecyclerView.Adapter<FriendRec
         View cell = inflater.inflate(R.layout.friend_list_element, parent, false);
         final CellHolder cellHolder = new CellHolder(cell);
         cellHolder.userName.setText(friendListCell.getUserName());
-        Picasso.with(context).load("http://" + friendListCell.getPhotoUrl()).into(cellHolder.userPhoto);
+        Picasso.with(context).load(friendListCell.getPhotoUrl()).into(cellHolder.userPhoto);
         cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

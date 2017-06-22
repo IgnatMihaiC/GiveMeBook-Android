@@ -9,9 +9,11 @@ import com.licenta.mihai.givemebook_android.Models.BaseModels.Book;
 public class BookCell {
 
     private Book book;
+    private String userPhoto = "";
 
-    public BookCell() {
-        book = new Book();
+    public BookCell(Book book, String userPhoto) {
+        this.book = book;
+        this.userPhoto = userPhoto;
     }
 
     public BookCell(Book books) {
@@ -24,5 +26,13 @@ public class BookCell {
 
     public void setBook(Book book) {
         this.book = book;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 }

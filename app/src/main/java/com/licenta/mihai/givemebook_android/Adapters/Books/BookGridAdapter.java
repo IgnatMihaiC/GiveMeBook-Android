@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold;
 import com.licenta.mihai.givemebook_android.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -59,6 +60,9 @@ public class BookGridAdapter extends BaseAdapter {
         } else {
             cellHolder = (BookGridAdapter.CellHolder) cell.getTag();
         }
+        Picasso.with(context).load(bookCells.get(position).getBook().getCover_photo()).into(cellHolder.bookImage);
+        Picasso.with(context).load(bookCells.get(position).getUserPhoto()).into(cellHolder.userImage);
+        cellHolder.bookTitle.setText(bookCells.get(position).getBook().getTitle());
         return cell;
     }
 

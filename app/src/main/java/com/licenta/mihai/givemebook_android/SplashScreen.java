@@ -43,9 +43,14 @@ public class SplashScreen extends AppCompatActivity {
                 .enqueue(new Callback<UserModel>() {
                     @Override
                     public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                        User.getInstance().setCurrentUser(response.body());
-                        Util.showObjectLog(response.body());
-                        Util.openActivityClosingParent(SplashScreen.this, MainActivity.class);
+                        if (response.isSuccessful()) {
+                            User.getInstance().setCurrentUser(response.body());
+                            Util.showObjectLog(response.body());
+                            Util.openActivityClosingParent(SplashScreen.this, MainActivity.class);
+                        }else{
+                            Util.openActivityClosingParent(SplashScreen.this, LandingActivity.class);
+                            OfflineHandler.getInstance().deleteUsernameAndPassword();
+                        }
                     }
 
                     @Override

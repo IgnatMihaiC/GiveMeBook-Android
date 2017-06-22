@@ -34,7 +34,7 @@ public class FriendActivity extends AppCompatActivity {
         int fid = intent.getIntExtra("position", 0);
 
         SharedUser friend = User.getInstance().getFriendList().get(fid);
-        Picasso.with(this).load("http://" + friend.getPhotoUrl()).into(userPhoto);
+        Picasso.with(this).load(friend.getPhotoUrl()).into(userPhoto);
         userName.setText(friend.getUsername().toUpperCase());
 
 

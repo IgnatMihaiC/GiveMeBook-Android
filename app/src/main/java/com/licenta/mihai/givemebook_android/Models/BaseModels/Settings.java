@@ -8,8 +8,6 @@ public class Settings {
 
     private Long sid = 0l;
 
-    private Boolean emailNotification = false;
-
     private Boolean pushNotification = false;
 
 
@@ -19,14 +17,6 @@ public class Settings {
 
     public void setSid(Long sid) {
         this.sid = sid;
-    }
-
-    public Boolean getEmailNotification() {
-        return emailNotification;
-    }
-
-    public void setEmailNotification(Boolean emailNotification) {
-        this.emailNotification = emailNotification;
     }
 
     public Boolean getPushNotification() {

@@ -11,11 +11,13 @@ public class UserModel {
     public long uid;
     public String username;
     public String email;
+    public String password;
     public long type;
     public String photoUrl;
     public String token;
     public String createdAt;
     public String updatedAt;
+    public String fbID;
 
     private List<Preferences> preferences;
     private Settings settings;
@@ -115,7 +117,23 @@ public class UserModel {
         return bookStates;
     }
 
-    public void setBookStates(List<BookState> bookStates) {
+   public void setBookStates(List<BookState> bookStates) {
         this.bookStates = bookStates;
+    }
+
+    public String getFbID() {
+        return fbID;
+    }
+
+    public void setFbID(String fbID) {
+        this.fbID = fbID;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

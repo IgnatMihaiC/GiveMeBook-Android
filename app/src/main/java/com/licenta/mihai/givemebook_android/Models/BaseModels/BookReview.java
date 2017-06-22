@@ -7,8 +7,16 @@ package com.licenta.mihai.givemebook_android.Models.BaseModels;
 public class BookReview {
 
     private Long idBookReview;
+    private Long userID;
     private String reviewContent;
 
+    public Long getUserID() {
+        return userID;
+    }
+
+    public void setUserID(Long userID) {
+        this.userID = userID;
+    }
 
     public Long getIdBookReview() {
         return idBookReview;

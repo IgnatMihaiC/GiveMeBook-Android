@@ -1,13 +1,19 @@
 package com.licenta.mihai.givemebook_android.CustomViews.Popups;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
+import com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText;
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold;
 import com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton;
 import com.licenta.mihai.givemebook_android.LandingActivity;
@@ -17,8 +23,14 @@ import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.R;
 import com.licenta.mihai.givemebook_android.Singletons.User;
 import com.licenta.mihai.givemebook_android.Utils.OfflineHandler;
+import com.licenta.mihai.givemebook_android.Utils.UploadPhoto;
 import com.licenta.mihai.givemebook_android.Utils.Util;
 
+import java.io.File;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,11 +44,18 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
 
     private Context context;
     private Dialog dialog;
-    private RadioGroup emailNotification;
     private RadioGroup pushNotification;
+    private BorderEditText newPassword;
+
+
     DialogInterface.OnDismissListener onDismissListener;
 
-    RoundBorderButton logOutButton;
+    private RoundBorderButton changePassword;
+    private RoundBorderButton changePhoto;
+    private RoundBorderButton logOutButton;
+
+    private String changePasswordButtonState = "first";
+    public UploadPhoto uploadPhoto = new UploadPhoto();
 
     public UserSettingsPopup(Context context, DialogInterface.OnDismissListener onDismissListener) {
         this.context = context;
@@ -52,15 +71,12 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
     public void init() {
         final TextViewOpenSansBold userName = (TextViewOpenSansBold) dialog.findViewById(R.id.userPopup_userName);
         logOutButton = (RoundBorderButton) dialog.findViewById(R.id.userPopup_logout_button);
-        userName.setText(User.getInstance().getCurrentUser().getUsername());
-        emailNotification = (RadioGroup) dialog.findViewById(R.id.toggle_email);
-        pushNotification = (RadioGroup) dialog.findViewById(R.id.toggle_push);
-        if (User.getInstance().getCurrentUser().getSettings().getEmailNotification()) {
-            emailNotification.check(R.id.custom_switch_toggle_email_on);
-        } else {
-            emailNotification.check(R.id.custom_switch_toggle_email_off);
-        }
+        changePassword = (RoundBorderButton) dialog.findViewById(R.id.userPopup_changePassword_button);
+        changePhoto = (RoundBorderButton) dialog.findViewById(R.id.userPopup_changePhoto_button);
 
+        userName.setText(User.getInstance().getCurrentUser().getUsername());
+        pushNotification = (RadioGroup) dialog.findViewById(R.id.toggle_push);
+        newPassword = (BorderEditText) dialog.findViewById(R.id.userPopup_changePassword_editText);
         if (User.getInstance().getCurrentUser().getSettings().getPushNotification()) {
             pushNotification.check(R.id.custom_switch_toggle_push_on);
         } else {
@@ -71,6 +87,55 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
             @Override
             public void onClick(View v) {
                 logoutUser();
+            }
+        });
+        changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (changePasswordButtonState.equals("first")) {
+                    newPassword.setVisibility(View.VISIBLE);
+                    changePassword.setText("Send");
+                    changePasswordButtonState = "second";
+                } else {
+                    if (newPassword.getText().toString().isEmpty()) {
+                        newPassword.setVisibility(View.GONE);
+                        changePassword.setText("Change Password");
+
+                    } else {
+                        final String pass = Util.sha1Hash(newPassword.getText().toString());
+                        RequestBody usernameBody = RequestBody.create(MediaType.parse("text/plain"), pass);
+                        RestClient.networkHandler().changePassword(User.getInstance().getCurrentUser().getToken(), User.getInstance().getCurrentUser()
+                                .getUid(), usernameBody)
+                                .enqueue(new Callback<NetStringResponse>() {
+                                    @Override
+                                    public void onResponse(Call<NetStringResponse> call, Response<NetStringResponse> response) {
+                                        if (response.isSuccessful()) {
+                                            User.getInstance().getCurrentUser().setPhotoUrl(pass);
+                                            OfflineHandler.getInstance().storePassword(pass);
+                                            newPassword.setVisibility(View.GONE);
+                                            changePassword.setText("Change Password");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<NetStringResponse> call, Throwable t) {
+
+                                    }
+                                });
+                    }
+                    changePasswordButtonState = "first";
+                }
+
+            }
+        });
+
+        changePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadPhoto.setContext(context);
+                uploadPhoto.clearPhotoDir();
+                uploadPhoto.defaultSelectMethodDialog();
+
             }
         });
     }
@@ -106,11 +171,6 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
     public void onDismiss(DialogInterface dialog) {
         Log.w("UpdateSettings", "OnDismiss");
         final Settings newSettings = new Settings();
-        if (emailNotification.getCheckedRadioButtonId() == R.id.custom_switch_toggle_email_on) {
-            newSettings.setEmailNotification(true);
-        } else {
-            newSettings.setEmailNotification(false);
-        }
         if (pushNotification.getCheckedRadioButtonId() == R.id.custom_switch_toggle_push_on) {
             newSettings.setPushNotification(true);
         } else {
@@ -136,6 +196,7 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
     }
 
     private void logoutUser() {
+        LoginManager.getInstance().logOut();
         RestClient.networkHandler().logoutUser(User.getInstance().getCurrentUser().getToken(), User.getInstance().getCurrentUser().getUid())
                 .enqueue(new Callback<NetStringResponse>() {
                     @Override
@@ -151,11 +212,32 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
                 });
     }
 
+    public void isPictureReady() {
+        File file = new File(uploadPhoto.getPicturePathEdited());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        RestClient.networkHandler().updatePhoto(User.getInstance().getCurrentUser().getToken(), User.getInstance().getCurrentUser().getUid(), requestFile)
+                .enqueue(new Callback<NetStringResponse>() {
+                    @Override
+                    public void onResponse(Call<NetStringResponse> call, Response<NetStringResponse> response) {
+                        if (response.isSuccessful()) {
+                            Util.showShortToast(context, "Success");
+                        } else {
+                            Util.showShortToast(context, "FailI");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<NetStringResponse> call, Throwable t) {
+                        Util.showShortToast(context, "FailE");
+                    }
+                });
+    }
+
     private Boolean allowServerCall(Settings settings) {
-        if (settings.getEmailNotification() == User.getInstance().getCurrentUser().getSettings().getEmailNotification())
-            if (settings.getPushNotification() == User.getInstance().getCurrentUser().getSettings().getPushNotification()) {
-                return false;
-            }
+        if (settings.getPushNotification() == User.getInstance().getCurrentUser().getSettings().getPushNotification()) {
+            return false;
+        }
         return true;
     }
+
 }

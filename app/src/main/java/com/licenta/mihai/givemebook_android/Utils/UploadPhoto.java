@@ -130,9 +130,6 @@ public class UploadPhoto {
                 if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
-                if (items[item].equals("View photo")) {
-
-                }
             }
         });
         builder.show();

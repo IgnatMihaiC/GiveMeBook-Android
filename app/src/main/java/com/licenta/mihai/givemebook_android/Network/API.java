@@ -1,17 +1,25 @@
 package com.licenta.mihai.givemebook_android.Network;
 
+import android.preference.Preference;
+
 import com.licenta.mihai.givemebook_android.Models.BaseModels.BookReview;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.BookState;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.Preferences;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Recommendations;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Settings;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.SharedUser;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
+import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetBookReviewReplay;
+import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetBookStateReplay;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetInteractions;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetLoginReply;
+import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetPreferences;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Response.NetStringResponse;
 
 import java.io.File;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -43,7 +51,7 @@ public interface API {
 
     @Multipart
     @POST("/api/user/updatePhoto")
-    Call<NetStringResponse> updatePhoto(@Header("Authorization") String token, @Part("id") Long userID, @Part("photo") RequestBody  photo);
+    Call<NetStringResponse> updatePhoto(@Header("Authorization") String token, @Part("id") Long userID, @Part MultipartBody.Part profilePhoto);
 
     @POST("api/user/login")
     Call<UserModel> loginUser(@Body NetLoginReply netLoginReply);
@@ -53,6 +61,9 @@ public interface API {
 
     @POST("api/user/updateSettings/{id}")
     Call<NetStringResponse> updateSettings(@Header("Authorization") String token, @Path("id") Long userID, @Body Settings settings);
+
+    @POST("api/user/updatePreferences/{id}")
+    Call<List<Preferences>> updatePreferences(@Header("Authorization") String token, @Path("id") Long userID, @Body List<NetPreferences> preferences);
 
     @GET("api/user/getUser/{id}")
     Call<SharedUser> getUserById(@Header("Authorization") String token, @Path("id") Long userID);
@@ -71,13 +82,23 @@ public interface API {
     Call<List<Recommendations>> getRecommendations(@Header("Authorization") String token, @Path("id") Long userID);
 
     @POST("api/book/addBookReview/{id}")
-    Call<NetStringResponse> addBookReview(@Header("Authorization") String token, @Path("id") Long bookID, @Body BookReview bookReview);
+    Call<NetStringResponse> addBookReview(@Header("Authorization") String token, @Path("id") Long bookID, @Body NetBookReviewReplay bookReview);
 
     @POST("api/user/addInteraction")
     Call<NetStringResponse> addInteractions(@Header("Authorization") String token, @Body NetInteractions interactions);
 
     @POST("api/user/removeInteraction")
     Call<NetStringResponse> removeInteraction(@Header("Authorization") String token, @Body NetInteractions interactions);
+
+
+    @POST("api/booktouser/addBookState")
+    Call<NetStringResponse> addBookState(@Header("Authorization") String token, @Body NetBookStateReplay bookStateReplay);
+
+    @POST("api/booktouser/removeBookState")
+    Call<NetStringResponse> removeBookState(@Header("Authorization") String token, @Body NetBookStateReplay bookStateReplay);
+
+    @POST("api/booktouser/getBookStateByUser/{id}")
+    Call<BookState> getBookStateByUser(@Header("Authorization") String token, @Path("id") Long uid);
 
 
 }

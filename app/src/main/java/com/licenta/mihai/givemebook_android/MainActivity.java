@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,6 +31,7 @@ import com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenS
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserAddBook;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserPreferencesPopup;
 import com.licenta.mihai.givemebook_android.CustomViews.Popups.UserSettingsPopup;
+import com.licenta.mihai.givemebook_android.Events.ActionEvent;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Interactions;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Recommendations;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.SharedUser;
@@ -38,13 +39,14 @@ import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.Singletons.User;
 import com.licenta.mihai.givemebook_android.Singletons.UserRecommendation;
 import com.licenta.mihai.givemebook_android.Utils.UploadPhoto;
-import com.licenta.mihai.givemebook_android.Utils.Util;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,10 +103,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
+
         getAdditionUserData();
         initComponents();
         initFriendList();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void initComponents() {
@@ -114,13 +125,17 @@ public class MainActivity extends AppCompatActivity {
             window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
         getRecommendations();
+        setUpUserPhoto();
+
+    }
+
+    private void setUpUserPhoto() {
         if (User.getInstance().getCurrentUser().getPhotoUrl() != null) {
             Picasso.with(MainActivity.this)
                     .load(User.getInstance().getCurrentUser().getPhotoUrl())
+                    .fit()
                     .into(profilePicture);
         }
-
-
     }
 
     private void getRecommendations() {
@@ -168,6 +183,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFriendList() {
         final List<FriendListCell> cells = new ArrayList<>();
+        if (User.getInstance().getCurrentUser().getInteractions().size() == 0) {
+            friendsList.setVisibility(View.GONE);
+        } else {
+            friendsList.setVisibility(View.VISIBLE);
+        }
+
         for (Interactions interactions : User.getInstance().getCurrentUser().getInteractions()) {
             if (interactions.getType() != 3) {
                 RestClient.networkHandler().getUserById(User.getInstance().getCurrentUser().getToken(), interactions.getRefId())
@@ -190,17 +211,13 @@ public class MainActivity extends AppCompatActivity {
         FriendRecyclerAdapterAdapter adapter = new FriendRecyclerAdapterAdapter(MainActivity.this, cells, new FriendRecyclerAdapterAdapter.CustomItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Intent intent = new Intent(MainActivity.this, FriendActivity.class);
+                Intent intent = new Intent(MainActivity.this, UserDetailsActivity.class);
                 intent.putExtra("position", position);
                 startActivity(intent);
             }
         });
         friendsList.setAdapter(adapter);
-        if (cells.size() == 0) {
-            friendsList.setVisibility(View.GONE);
-        } else {
-            friendsList.setVisibility(View.VISIBLE);
-        }
+
     }
 
 
@@ -226,14 +243,7 @@ public class MainActivity extends AppCompatActivity {
                 preffsPopup.showUserPopup();
                 break;
             case R.id.main_view_profile_settings_gen:
-                DialogInterface.OnDismissListener onDismiss = new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        exitSettingsAnimation();
-                        toggleSettings = true;
-                    }
-                };
-                userSettingsPopup = new UserSettingsPopup(MainActivity.this, onDismiss);
+                userSettingsPopup = new UserSettingsPopup(MainActivity.this);
                 userSettingsPopup.init();
                 userSettingsPopup.showUserPopup();
                 break;
@@ -252,6 +262,33 @@ public class MainActivity extends AppCompatActivity {
                 userAddBook.showUserPopup();
                 break;
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onClosingPopup(ActionEvent event) {
+        switch (event.getType()) {
+            case "userPhoto":
+                Picasso.with(MainActivity.this)
+                        .load(User.getInstance().getCurrentUser().getPhotoUrl())
+                        .fit()
+                        .into(profilePicture, new com.squareup.picasso.Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.w("T","T");
+                            }
+
+                            @Override
+                            public void onError() {
+                                Log.w("T","T");
+                            }
+                        });
+                break;
+            case "menu":
+                exitSettingsAnimation();
+                toggleSettings = true;
+                break;
+        }
+
     }
 
 
@@ -495,6 +532,12 @@ public class MainActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override

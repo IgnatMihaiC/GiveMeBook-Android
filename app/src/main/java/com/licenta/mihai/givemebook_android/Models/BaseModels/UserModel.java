@@ -22,7 +22,6 @@ public class UserModel {
     private List<Preferences> preferences;
     private Settings settings;
     private List<Interactions> interactions;
-//    private List<Recommendations> recommendations;
     private List<BookState> bookStates;
 
     public long getUid() {
@@ -117,7 +116,7 @@ public class UserModel {
         return bookStates;
     }
 
-   public void setBookStates(List<BookState> bookStates) {
+    public void setBookStates(List<BookState> bookStates) {
         this.bookStates = bookStates;
     }
 
@@ -135,5 +134,14 @@ public class UserModel {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    public Integer getBookStateIndex(Long bId) {
+        for (int i = 0; i < this.getBookStates().size(); i++) {
+            if (this.getBookStates().get(i).getBook().getbId() == bId)
+                return i;
+        }
+        return null;
     }
 }

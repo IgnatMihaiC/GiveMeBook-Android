@@ -1,50 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:orientation="vertical">
 
-    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-        android:id="@+id/userPreferencesUpdateButton"
-        android:layout_width="225dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/round_border_button"
-        android:text="Save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.506"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
-        app:layout_constraintVertical_bias="0.454"
-        app:spinning_bar_color="@color/colorAccent" />
+    <RelativeLayout
+        android:layout_width="340dp"
+        android:layout_height="400dp"
+        android:background="@drawable/custom_dialog_layout"
+        android:padding="20dp">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="74dp" />
+        <com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton
+            android:id="@+id/userPreferencesUpdateButton"
+            android:layout_width="120dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/round_border_button"
+            android:text="Save" />
 
-    <GridView
-        android:id="@+id/userPreferencesGridView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="0dp"
-        android:listSelector="@android:color/transparent"
-        android:numColumns="3"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintLeft_toRightOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-</android.support.constraint.ConstraintLayout>
+
+        <com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton
+            android:id="@+id/userPreferencesUpdateButton_dismiss"
+            android:layout_width="120dp"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:text="Dismiss" />
+
+        <LinearLayout
+            android:id="@+id/linearAdd"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_above="@id/userPreferencesUpdateButton"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="1"
+            app:layout_constraintBottom_toTopOf="@+id/userPreferencesUpdateButton"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userPreferencesGridView">
+
+
+            <com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText
+                android:id="@+id/addPref_prefName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:paddingStart="10dp" />
+
+            <com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton
+                android:id="@+id/addPref_prefButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="0.4"
+                android:text="Add" />
+        </LinearLayout>
+
+
+        <GridView
+            android:id="@+id/userPreferencesGridView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/linearAdd"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:listSelector="@android:color/transparent"
+            android:numColumns="3" />
+    </RelativeLayout>
+</RelativeLayout>

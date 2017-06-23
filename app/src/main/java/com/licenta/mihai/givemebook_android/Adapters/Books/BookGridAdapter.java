@@ -60,8 +60,8 @@ public class BookGridAdapter extends BaseAdapter {
         } else {
             cellHolder = (BookGridAdapter.CellHolder) cell.getTag();
         }
-        Picasso.with(context).load(bookCells.get(position).getBook().getCover_photo()).into(cellHolder.bookImage);
-        Picasso.with(context).load(bookCells.get(position).getUserPhoto()).into(cellHolder.userImage);
+        Picasso.with(context).load(bookCells.get(position).getBook().getCover_photo()).error(R.drawable.book_default).into(cellHolder.bookImage);
+        Picasso.with(context).load("http://192.168.100.217:8080/api/resource/image/user/" + bookCells.get(position).getBook().getUploaderID()).error(R.drawable.user_default).into(cellHolder.userImage);
         cellHolder.bookTitle.setText(bookCells.get(position).getBook().getTitle());
         return cell;
     }

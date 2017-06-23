@@ -30,7 +30,7 @@ public class UserAddBook {
     private Context context;
     private Dialog dialog;
     private DialogInterface.OnDismissListener dismissListener;
-    private CircularProgressButton sendButton;
+    private CircularProgressButton sendButton,dismissButton;
     private BorderEditText titleEditText, authorEditText, descriptionEditText, categoryEditText;
 
     public UserAddBook(Context context, DialogInterface.OnDismissListener dismissListener) {
@@ -42,12 +42,22 @@ public class UserAddBook {
         dialog = new Dialog(context, R.style.CustomAlertDialog);
         dialog.setContentView(R.layout.add_book_layout);
         dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
         dialog.setOnDismissListener(dismissListener);
+
+
         titleEditText = (BorderEditText) dialog.findViewById(R.id.add_book_title_editText);
         authorEditText = (BorderEditText) dialog.findViewById(R.id.add_book_author_editText);
         descriptionEditText = (BorderEditText) dialog.findViewById(R.id.add_book_description_editText);
         categoryEditText = (BorderEditText) dialog.findViewById(R.id.add_book_categorie_editText);
         sendButton = (CircularProgressButton) dialog.findViewById(R.id.add_book_send_button);
+        dismissButton = (CircularProgressButton) dialog.findViewById(R.id.add_book_dismiss_button);
+        dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissDialog();
+            }
+        });
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,17 +114,17 @@ public class UserAddBook {
                 .enqueue(new Callback<NetStringResponse>() {
                     @Override
                     public void onResponse(Call<NetStringResponse> call, Response<NetStringResponse> response) {
-                        dismissDateDialog();
+                        dismissDialog();
                     }
 
                     @Override
                     public void onFailure(Call<NetStringResponse> call, Throwable t) {
-//                        dismissDateDialog();
+//                        dismissDialog();
                     }
                 });
     }
 
-    public void dismissDateDialog() {
+    public void dismissDialog() {
         if (dialog != null) {
             if (dialog.isShowing()) {
                 try {

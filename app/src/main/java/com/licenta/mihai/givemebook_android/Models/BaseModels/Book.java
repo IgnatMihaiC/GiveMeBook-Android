@@ -14,7 +14,7 @@ public class Book {
     private String author = "";
     private String description = "";
     private String cover_photo = "";
-
+    private Long uploaderID = 0l;
     private List<Categories> categories = new ArrayList<>();
     private List<BookReview> bookReviews = new ArrayList<>();
 
@@ -72,5 +72,13 @@ public class Book {
 
     public void setBookReviews(List<BookReview> bookReviews) {
         this.bookReviews = bookReviews;
+    }
+
+    public Long getUploaderID() {
+        return uploaderID;
+    }
+
+    public void setUploaderID(Long uploaderID) {
+        this.uploaderID = uploaderID;
     }
 }

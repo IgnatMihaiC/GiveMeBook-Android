@@ -14,6 +14,11 @@ public class PreferenceGridCell {
         this.preferences = preferences;
     }
 
+    public PreferenceGridCell(String s) {
+        this.preferences = new Preferences();
+        this.preferences.setPname(s);
+    }
+
     public Preferences getPreferences() {
         return preferences;
     }

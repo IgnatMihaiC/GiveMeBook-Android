@@ -22,7 +22,6 @@ import com.facebook.login.widget.LoginButton;
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.UserModel;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Replay.NetLoginReply;
-import com.licenta.mihai.givemebook_android.Models.NetModels.Response.NetStringResponse;
 import com.licenta.mihai.givemebook_android.Network.RestClient;
 import com.licenta.mihai.givemebook_android.Singletons.User;
 import com.licenta.mihai.givemebook_android.Utils.OfflineHandler;

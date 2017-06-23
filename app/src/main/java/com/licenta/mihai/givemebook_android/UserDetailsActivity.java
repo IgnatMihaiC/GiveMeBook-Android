@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FriendActivity extends AppCompatActivity {
+public class UserDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.friend_activity_tab_host)
     TabHost tabHost;

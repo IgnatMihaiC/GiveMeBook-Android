@@ -1,21 +1,18 @@
 package com.licenta.mihai.givemebook_android.CustomViews.Popups;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.BorderEditText;
 import com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold;
 import com.licenta.mihai.givemebook_android.CustomViews.RoundBorderButton;
+import com.licenta.mihai.givemebook_android.Events.ActionEvent;
 import com.licenta.mihai.givemebook_android.LandingActivity;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Settings;
 import com.licenta.mihai.givemebook_android.Models.NetModels.Response.NetStringResponse;
@@ -25,6 +22,8 @@ import com.licenta.mihai.givemebook_android.Singletons.User;
 import com.licenta.mihai.givemebook_android.Utils.OfflineHandler;
 import com.licenta.mihai.givemebook_android.Utils.UploadPhoto;
 import com.licenta.mihai.givemebook_android.Utils.Util;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -48,8 +47,6 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
     private BorderEditText newPassword;
 
 
-    DialogInterface.OnDismissListener onDismissListener;
-
     private RoundBorderButton changePassword;
     private RoundBorderButton changePhoto;
     private RoundBorderButton logOutButton;
@@ -57,9 +54,8 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
     private String changePasswordButtonState = "first";
     public UploadPhoto uploadPhoto = new UploadPhoto();
 
-    public UserSettingsPopup(Context context, DialogInterface.OnDismissListener onDismissListener) {
+    public UserSettingsPopup(Context context) {
         this.context = context;
-        this.onDismissListener = onDismissListener;
         dialog = new Dialog(context, R.style.CustomAlertDialog);
         dialog.setOnDismissListener(this);
         dialog.setContentView(R.layout.profile_setting_dialog);
@@ -193,6 +189,7 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
                         }
                     });
         }
+        EventBus.getDefault().post(new ActionEvent("menu"));
     }
 
     private void logoutUser() {
@@ -214,13 +211,16 @@ public class UserSettingsPopup implements DialogInterface.OnDismissListener {
 
     public void isPictureReady() {
         File file = new File(uploadPhoto.getPicturePathEdited());
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        RestClient.networkHandler().updatePhoto(User.getInstance().getCurrentUser().getToken(), User.getInstance().getCurrentUser().getUid(), requestFile)
+        final RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part filePart = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+        RestClient.networkHandler().updatePhoto(User.getInstance().getCurrentUser().getToken(), User.getInstance().getCurrentUser().getUid(), filePart)
                 .enqueue(new Callback<NetStringResponse>() {
                     @Override
                     public void onResponse(Call<NetStringResponse> call, Response<NetStringResponse> response) {
                         if (response.isSuccessful()) {
                             Util.showShortToast(context, "Success");
+                            User.getInstance().getCurrentUser().setPhotoUrl(response.body().getMessage());
+                            EventBus.getDefault().post(new ActionEvent("userPhoto"));
                         } else {
                             Util.showShortToast(context, "FailI");
                         }

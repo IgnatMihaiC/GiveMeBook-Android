@@ -144,4 +144,12 @@ public class UserModel {
         }
         return null;
     }
+
+    public Integer getInteractionIndex(Long rId) {
+        for (int i = 0; i < this.getInteractions().size(); i++) {
+            if (this.getInteractions().get(i).getRefId() == rId)
+                return i;
+        }
+        return null;
+    }
 }

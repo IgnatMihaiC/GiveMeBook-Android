@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class SharedUser {
+    private Long uid;
     private String username;
     private String photoUrl;
     private String fbID;
@@ -51,5 +52,13 @@ public class SharedUser {
 
     public void setBookStates(List<BookState> bookStates) {
         this.bookStates = bookStates;
+    }
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
     }
 }

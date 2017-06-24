@@ -18,7 +18,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_view_profile_settings_layout)
     RelativeLayout profileSettings;
 
-    @BindView(R.id.main_view_search)
+    @BindView(R.id.main_view_profile)
     ImageView profileSearch;
 
     @BindView(R.id.main_view_gridMainData)
@@ -83,9 +82,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.main_view_profile_settings_gen)
     ImageView settingsGen;
 
-    @BindView(R.id.main_view_search_input)
-    EditText searchInput;
-
     @BindView(R.id.main_view_friend_list)
     RecyclerView friendsList;
 
@@ -95,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Boolean toggleMenu = true;
     private Boolean toggleSettings = true;
-    private Boolean toggleSearch = true;
     private UserSettingsPopup userSettingsPopup;
 
     @Override
@@ -104,15 +99,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         ButterKnife.bind(this);
 
-        getAdditionUserData();
-        initComponents();
-        initFriendList();
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        initComponents();
+        initFriendList();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -154,15 +148,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpRecommendations(Response<List<Recommendations>> response) {
+        List<BookCell> allBooks = new ArrayList<>();
+        BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
+        gridView.setAdapter(adapter);
         UserRecommendation.getInstance().setRecommendationsList(response.body());
         if (UserRecommendation.getInstance().getRecommendationsList().size() != 0) {
             noInfos.setVisibility(View.GONE);
-            List<BookCell> allBooks = new ArrayList<>();
             for (Recommendations r : response.body()) {
                 allBooks.add(new BookCell(r.getBook(), r.getUser().getPhotoUrl()));
             }
-            BookGridAdapter adapter = new BookGridAdapter(MainActivity.this, allBooks);
-            gridView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -177,18 +172,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void getAdditionUserData() {
-
-    }
 
     private void initFriendList() {
+//        friendsList.removeAllViews();
         final List<FriendListCell> cells = new ArrayList<>();
         if (User.getInstance().getCurrentUser().getInteractions().size() == 0) {
             friendsList.setVisibility(View.GONE);
         } else {
             friendsList.setVisibility(View.VISIBLE);
         }
-
+        final FriendRecyclerAdapterAdapter adapter = new FriendRecyclerAdapterAdapter(MainActivity.this, cells, new FriendRecyclerAdapterAdapter.CustomItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                Intent intent = new Intent(MainActivity.this, UserDetailsActivity.class);
+                intent.putExtra("position", position);
+                startActivity(intent);
+            }
+        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        friendsList.setLayoutManager(layoutManager);
+        friendsList.setAdapter(adapter);
         for (Interactions interactions : User.getInstance().getCurrentUser().getInteractions()) {
             if (interactions.getType() != 3) {
                 RestClient.networkHandler().getUserById(User.getInstance().getCurrentUser().getToken(), interactions.getRefId())
@@ -197,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onResponse(Call<SharedUser> call, Response<SharedUser> response) {
                                 User.getInstance().getFriendList().add(response.body());
                                 cells.add(new FriendListCell(response.body().getUsername(), response.body().getPhotoUrl()));
+                                adapter.notifyDataSetChanged();
                             }
 
                             @Override
@@ -206,22 +210,11 @@ public class MainActivity extends AppCompatActivity {
                         });
             }
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        friendsList.setLayoutManager(layoutManager);
-        FriendRecyclerAdapterAdapter adapter = new FriendRecyclerAdapterAdapter(MainActivity.this, cells, new FriendRecyclerAdapterAdapter.CustomItemClickListener() {
-            @Override
-            public void onItemClick(View v, int position) {
-                Intent intent = new Intent(MainActivity.this, UserDetailsActivity.class);
-                intent.putExtra("position", position);
-                startActivity(intent);
-            }
-        });
-        friendsList.setAdapter(adapter);
 
     }
 
 
-    @OnClick({R.id.main_view_profile_picture, R.id.main_view_add_book, R.id.main_view_profile_settings, R.id.main_view_search, R.id.main_view_profile_preferences, R.id.main_view_profile_settings_gen})
+    @OnClick({R.id.main_view_profile_picture, R.id.main_view_add_book, R.id.main_view_profile_settings, R.id.main_view_profile, R.id.main_view_profile_preferences, R.id.main_view_profile_settings_gen})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.main_view_profile_picture:
@@ -247,8 +240,10 @@ public class MainActivity extends AppCompatActivity {
                 userSettingsPopup.init();
                 userSettingsPopup.showUserPopup();
                 break;
-            case R.id.main_view_search:
-                doSearchAnimations();
+            case R.id.main_view_profile:
+                Intent intent = new Intent(MainActivity.this, UserDetailsActivity.class);
+                intent.putExtra("fid", User.getInstance().getCurrentUser().getUid());
+                startActivity(intent);
                 break;
             case R.id.main_view_add_book:
                 DialogInterface.OnDismissListener onDismissBook = new DialogInterface.OnDismissListener() {
@@ -274,12 +269,12 @@ public class MainActivity extends AppCompatActivity {
                         .into(profilePicture, new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
-                                Log.w("T","T");
+                                Log.w("T", "T");
                             }
 
                             @Override
                             public void onError() {
-                                Log.w("T","T");
+                                Log.w("T", "T");
                             }
                         });
                 break;
@@ -439,88 +434,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void doSearchAnimations() {
-        if (toggleSearch) {
-            searchInput.setVisibility(View.VISIBLE);
-            searchInput.animate().translationX(-320).setDuration(600);
-            searchInput.animate().setListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            toggleSearch = false;
-        } else {
-            closeSoftKeyboard();
-            searchInput.animate().translationX(320).setDuration(600);
-            searchInput.animate().setListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    searchInput.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animation) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animation) {
-
-                }
-            });
-            searchInput.setText("");
-            toggleSearch = true;
-        }
-    }
 
     private void resetAnimations() {
         exitSettingsAnimation();
         toggleSettings = true;
         exitAnimation();
-        searchInput.animate().translationX(320).setDuration(600);
-        searchInput.animate().setListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                searchInput.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        searchInput.setText("");
-        toggleSearch = true;
         toggleMenu = true;
     }
 

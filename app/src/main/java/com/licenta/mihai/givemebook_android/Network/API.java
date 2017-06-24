@@ -4,6 +4,7 @@ import android.preference.Preference;
 
 import com.licenta.mihai.givemebook_android.Models.BaseModels.BookReview;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.BookState;
+import com.licenta.mihai.givemebook_android.Models.BaseModels.Interactions;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Preferences;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Recommendations;
 import com.licenta.mihai.givemebook_android.Models.BaseModels.Settings;
@@ -85,7 +86,7 @@ public interface API {
     Call<NetStringResponse> addBookReview(@Header("Authorization") String token, @Path("id") Long bookID, @Body NetBookReviewReplay bookReview);
 
     @POST("api/user/addInteraction")
-    Call<NetStringResponse> addInteractions(@Header("Authorization") String token, @Body NetInteractions interactions);
+    Call<Interactions> addInteractions(@Header("Authorization") String token, @Body NetInteractions interactions);
 
     @POST("api/user/removeInteraction")
     Call<NetStringResponse> removeInteraction(@Header("Authorization") String token, @Body NetInteractions interactions);
@@ -97,8 +98,9 @@ public interface API {
     @POST("api/booktouser/removeBookState")
     Call<NetStringResponse> removeBookState(@Header("Authorization") String token, @Body NetBookStateReplay bookStateReplay);
 
-    @POST("api/booktouser/getBookStateByUser/{id}")
-    Call<BookState> getBookStateByUser(@Header("Authorization") String token, @Path("id") Long uid);
+    @GET("api/booktouser/getBookStateByUser/{id}")
+    Call<List<BookState>> getBookStateByUser(@Header("Authorization") String token, @Path("id") Long uid);
+
 
 
 }

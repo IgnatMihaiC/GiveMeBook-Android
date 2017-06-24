@@ -11,6 +11,7 @@
         android:id="@+id/friend_activity_userPhoto"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/profile_mockup"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -20,7 +21,7 @@
         android:id="@+id/friend_activity_userName"
         android:layout_width="0dp"
         android:layout_height="20dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:text="SomeName"
         android:textSize="16sp"
@@ -28,6 +29,24 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/friend_activity_userPhoto" />
+
+
+    <com.like.LikeButton
+        android:id="@+id/addFriendButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        app:circle_end_color="@color/colorAccent"
+        app:circle_start_color="@color/colorPrimary"
+        app:dots_primary_color="@color/colorAccent"
+        app:dots_secondary_color="@color/colorPrimary"
+        app:icon_size="40dp"
+        app:icon_type="star"
+        app:layout_constraintBottom_toTopOf="@id/friend_activity_userName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_goneMarginBottom="10dp" />
 
     <TabHost
         android:id="@+id/friend_activity_tab_host"
@@ -60,11 +79,26 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold
+                        android:id="@+id/noLayoutMessage_liked"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:visibility="visible"
+                        android:gravity="center"
+                        android:text="No liked book"
+                        android:textSize="24sp" />
+
                     <GridView
                         android:id="@+id/friend_books_liked"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="50dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"
@@ -79,11 +113,26 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <com.licenta.mihai.givemebook_android.CustomViews.CustomText.TextViewOpenSansBold
+                        android:id="@+id/noLayoutMessage_fav"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="10dp"
+                        android:visibility="visible"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="No favorite book"
+                        android:textSize="24sp" />
+
                     <GridView
                         android:id="@+id/friend_books_fav"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="50dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginRight="8dp"

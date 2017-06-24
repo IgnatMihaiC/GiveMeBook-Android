@@ -1,5 +1,6 @@
 package com.licenta.mihai.givemebook_android;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -228,7 +229,15 @@ public class BookDetailsActivity extends AppCompatActivity {
                                     break;
                             }
                         } else {
-                            User.getInstance().getCurrentUser().getBookStates().get(User.getInstance().getCurrentUser().getBookStateIndex(currentSelectedBook.getbId())).setType(netBookStateReplay.getType());
+                            if (User.getInstance().getCurrentUser().getBookStateIndex(currentSelectedBook.getbId()) != null)
+                                User.getInstance().getCurrentUser().getBookStates().get(User.getInstance().getCurrentUser().getBookStateIndex(currentSelectedBook.getbId())).setType(netBookStateReplay.getType());
+                            else{
+                                BookState bookState = new BookState();
+                                bookState.setType(netBookStateReplay.getType());
+                                bookState.setBook(currentSelectedBook);
+
+                            }
+
                         }
                     }
 
@@ -258,7 +267,9 @@ public class BookDetailsActivity extends AppCompatActivity {
                 manageAddReview();
                 break;
             case R.id.details_uploadedBy:
-                Util.openActivity(BookDetailsActivity.this, UserDetailsActivity.class);
+                Intent intent = new Intent(BookDetailsActivity.this, UserDetailsActivity.class);
+                intent.putExtra("fid", currentSelectedBook.getUploaderID());
+                startActivity(intent);
                 break;
         }
     }

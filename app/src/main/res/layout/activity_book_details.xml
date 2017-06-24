@@ -199,7 +199,7 @@
                         android:layout_height="50dp"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="50dp"
                         android:layout_marginEnd="20dp"
                         android:src="@drawable/ic_add_black_24dp" />
                 </RelativeLayout>
@@ -215,6 +215,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="10dp"
         app:circle_end_color="@color/colorAccent"
+        app:circle_start_color="@color/colorPrimary"
         app:dots_primary_color="@color/colorAccent"
         app:dots_secondary_color="@color/colorPrimary"
         app:icon_size="35dp"
@@ -229,6 +230,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
         app:circle_end_color="@color/colorAccent"
+        app:circle_start_color="@color/colorPrimary"
         app:dots_primary_color="@color/colorAccent"
         app:dots_secondary_color="@color/colorPrimary"
         app:icon_size="35dp"

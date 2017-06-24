@@ -36,26 +36,16 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/main_view_search_input"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/custom_edit_text"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/main_view_search"
+        android:id="@+id/main_view_profile"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginLeft="135dp"
         android:layout_marginStart="135dp"
         android:layout_marginTop="21dp"
         android:padding="5dp"
-        android:src="@drawable/search_icon"
+        android:src="@drawable/my_profile_icon"
         android:visibility="visible"
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,7 +63,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/main_view_profile_settings_layout"
         app:layout_constraintLeft_toLeftOf="@+id/guideline2"
-        app:layout_constraintTop_toBottomOf="@+id/main_view_search"
+        app:layout_constraintTop_toBottomOf="@+id/main_view_profile"
         app:layout_constraintVertical_bias="0.0" />
 
     <RelativeLayout
